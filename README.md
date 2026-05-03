@@ -1,7 +1,7 @@
 # Open Sound Meter
 Crossplatform measurement software for tuning sound systems.
 
-**Supported systems:** macOS, Windows, Linux
+**Supported systems:** macOS, Windows, Linux, Android
 
 Current version: v1.4.1
 
