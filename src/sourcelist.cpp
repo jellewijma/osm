@@ -464,7 +464,7 @@ bool SourceList::importFile(const QUrl &fileName, QString separator)
 
     std::vector<Abstract::Source::FTData> d;
     d.reserve(480); //48 ppo
-    auto s = std::make_shared<Stored>();
+    auto s = std::shared_ptr<Stored>(new Stored());
 
     while (file.readLine(line, 1024) > 0) {
         QString qLine(line);
@@ -542,7 +542,7 @@ bool SourceList::importImpulse(const QUrl &fileName, QString separator)
 
     std::vector<Abstract::Source::TimeData> d;
     d.reserve(6720); //140ms @ 48kHz
-    auto s = std::make_shared<Stored>();
+    auto s = std::shared_ptr<Stored>(new Stored());
 
     while (file.readLine(line, 1024) > 0) {
         QString qLine(line);
@@ -582,7 +582,7 @@ bool SourceList::importWav(const QUrl &fileName)
 
     std::vector<Abstract::Source::TimeData> d;
     d.reserve(6720); //140ms @ 48kHz
-    auto s = std::make_shared<Stored>();
+    auto s = std::shared_ptr<Stored>(new Stored());
 
     value = wav.nextSample(false, &finished);
     while (!finished) {
@@ -711,7 +711,7 @@ template<typename T> bool SourceList::loadObject(const QJsonObject &data, const 
     if (data.isEmpty())
         return false;
 
-    auto s = std::make_shared<T>();
+    auto s = std::shared_ptr<T>(new T());
     s->fromJSON(data, topList);
     Shared::Source shared{ s };
     appendItem(shared, false);
@@ -721,7 +721,7 @@ template<typename T> bool SourceList::loadObject(const QJsonObject &data, const 
 
 template<typename T, typename... Ts> Shared::Source SourceList::add(Ts... args)
 {
-    Shared::Source t{ std::make_shared<T>(&args...) };
+    Shared::Source t{ std::shared_ptr<T>(new T(&args...)) };
     appendItem(t, true);
     return t;
 }

@@ -36,7 +36,7 @@ Stored::Stored(QObject *parent) : Abstract::Source(parent), Meta::Stored()
 
 Shared::Source Stored::clone() const
 {
-    auto cloned = std::make_shared<Stored>(parent());
+    auto cloned = std::shared_ptr<Stored>(new Stored(parent()));
     cloned->build(*this);
     cloned->setActive(active());
     cloned->setName(name());

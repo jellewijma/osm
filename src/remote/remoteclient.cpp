@@ -188,13 +188,13 @@ std::shared_ptr<Item> Client::addItem(const QUuid &serverId, const QUuid &source
 {
     std::shared_ptr<Item> item;
     if (objectName == "Measurement") {
-        item = std::make_shared<remote::MeasurementItem>(this);
+        item = std::shared_ptr<remote::MeasurementItem>(new remote::MeasurementItem(this));
     } else if (objectName == "Stored") {
-        item = std::make_shared<remote::StoredItem>(this);
+        item = std::shared_ptr<remote::StoredItem>(new remote::StoredItem(this));
     } else if (objectName == "Group") {
-        item = std::make_shared<remote::GroupItem>(this);
+        item = std::shared_ptr<remote::GroupItem>(new remote::GroupItem(this));
     } else {
-        item = std::make_shared<remote::Item>(this);
+        item = std::shared_ptr<remote::Item>(new remote::Item(this));
     }
     item->setServerId(serverId);
     item->setSourceId(sourceId);
@@ -273,7 +273,7 @@ void Client::processData(QHostAddress senderAddress, [[maybe_unused]] int sender
         auto generatorUuid = QUuid::fromString(document["generator"].toString());
         if (!generatorUuid.isNull()) {
             if (m_generators.find(qHash(serverId)) == m_generators.end() ) {
-                auto generator = std::make_shared<GeneratorRemote>(this);
+                auto generator = std::shared_ptr<GeneratorRemote>(new GeneratorRemote(this));
                 generator->setServerId(serverId);
                 generator->setSourceId(generatorUuid);
                 generator->setHost(host);

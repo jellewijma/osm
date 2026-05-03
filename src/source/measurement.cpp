@@ -22,6 +22,7 @@
 #include <QtMath>
 #include <algorithm>
 #include <utility>
+#include <future>
 #include "measurement.h"
 #include "audio/client.h"
 #include "generator/generatorthread.h"
@@ -642,7 +643,7 @@ void Measurement::averaging()
 }
 Shared::Source Measurement::store()
 {
-    auto store = std::make_shared<Stored>();
+    auto store = std::shared_ptr<Stored>(new Stored());
     store->build( *this );
     store->autoName(name());
 
@@ -701,7 +702,7 @@ Shared::Source Measurement::store()
 }
 Shared::Source Measurement::clone() const
 {
-    auto cloned = std::make_shared<Measurement>();
+    auto cloned = std::shared_ptr<Measurement>(new Measurement());
 
     cloned->setActive(false);
     cloned->setMode(mode());

@@ -283,7 +283,7 @@ HEADERS += \
     src/container/array.h
 
 #math
-equals(QT_ARCH, "arm64")|equals(QT_ARCH, "arm") {
+equals(QT_ARCH, "arm64")|equals(QT_ARCH, "arm")|android {
     message("Building for: ARM ($${QT_ARCH})")
     HEADERS += src/armmath.h
 } else {
@@ -368,7 +368,7 @@ win32 {
     }
 }
 
-unix:!macx:!ios {
+unix:!macx:!ios:!android {
     HEADERS += \
         src/audio/plugins/alsa.h
 
@@ -376,6 +376,26 @@ unix:!macx:!ios {
         src/audio/plugins/alsa.cpp
 
     LIBS += -lasound
+}
+
+android {
+    HEADERS += \
+        src/audio/plugins/opensles.h
+
+    SOURCES += \
+        src/audio/plugins/opensles.cpp
+
+    LIBS += -lOpenSLES
+
+    # Workaround for NDK libc++ make_shared incompatibility with QObject-derived types.
+    QMAKE_CXXFLAGS += -Wno-error
+
+    ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
+
+    DISTFILES += \
+        android/AndroidManifest.xml \
+        android/build.gradle \
+        android/gradle.properties
 }
 
 GRAPH = $$(GRAPH_BACKEND)

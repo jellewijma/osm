@@ -54,7 +54,7 @@ Union::~Union()
 
 Shared::Source Union::clone() const
 {
-    auto cloned = std::make_shared<Union>();
+    auto cloned = std::shared_ptr<Union>(new Union());
 
     cloned->setCount(count());
     cloned->setOperation(operation());
@@ -745,7 +745,7 @@ void Union::fromJSON(QJsonObject data, const SourceList *list) noexcept
     setName(data["name"].toString(name()));
     setAutoName(data["autoName"].toBool(true));
 
-    auto connection = std::make_shared<QMetaObject::Connection>();
+    auto connection = std::shared_ptr<QMetaObject::Connection>(new QMetaObject::Connection());
     auto connection_ptr = connection.get();
     auto fillSources = [ = ]() {
         setCount(data["count"].toInt(count()));
@@ -773,7 +773,7 @@ Union::Operation Union::operation() const noexcept
 }
 Shared::Source Union::store()
 {
-    auto store = std::make_shared<Stored>();
+    auto store = std::shared_ptr<Stored>(new Stored());
     store->build( *this );
     store->autoName(name());
 

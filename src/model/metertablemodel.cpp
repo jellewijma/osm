@@ -33,7 +33,7 @@ void MeterTableModel::resize()
         int c = 0;
         for (auto &cell : row) {
             if (!cell) {
-                cell = std::make_shared<Chart::MeterPlot>(this);
+                cell = std::shared_ptr<Chart::MeterPlot>(new Chart::MeterPlot(this));
                 if (sourceList()) {
                     cell->setSourceList(sourceList());
                     cell->setSource(sourceList()->firstSource());

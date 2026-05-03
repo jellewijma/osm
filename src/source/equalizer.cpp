@@ -24,7 +24,7 @@ namespace Source {
 
 Equalizer::Equalizer(QObject *parent)
     : Abstract::Source{parent}, Meta::Equalizer(),
-      m_filterList(std::make_shared<SourceList>(this, false))
+      m_filterList(std::shared_ptr<SourceList>(new SourceList(this, false)))
 {
     setObjectName("Equalizer");
     setName("Equalizer");
@@ -54,7 +54,7 @@ Equalizer::~Equalizer()
 
 Shared::Source Equalizer::clone() const
 {
-    auto cloned = std::make_shared<Equalizer>();
+    auto cloned = std::shared_ptr<Equalizer>(new Equalizer());
     cloned->setActive(active());
     cloned->setName(name());
     cloned->setMode(mode());
@@ -108,7 +108,7 @@ void Equalizer::setSize(unsigned int newSize)
     }
 
     while (m_filterList->size() < newSize) {
-        auto filter = std::make_shared<FilterSource>();
+        auto filter = std::shared_ptr<FilterSource>(new FilterSource());
         filter->setSampleRate(sampleRate());
         filter->setMode(mode());
         filter->setType(Meta::Filter::Type::Peak);

@@ -58,7 +58,7 @@ void Group::fromJSON(QJsonObject data, const SourceList *list) noexcept
 
 Shared::Source Group::clone() const
 {
-    auto cloned = std::make_shared<Group>(parent());
+    auto cloned = std::shared_ptr<Group>(new Group(parent()));
     cloned->setActive(active());
     cloned->setName(name());
     for (auto it = m_sourceList.cbegin(); it != m_sourceList.cend(); ++it) {

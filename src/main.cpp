@@ -60,6 +60,14 @@ int main(int argc, char *argv[])
     QQuickWindow::setSceneGraphBackend(Chart::SeriesNode::chooseRhi());
 #elif defined(GRAPH_OPENGL)
     QQuickWindow::setSceneGraphBackend(QSGRendererInterface::OpenGL);
+#ifdef Q_OS_ANDROID
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QSurfaceFormat surfaceFormat;
+    surfaceFormat.setRenderableType(QSurfaceFormat::OpenGLES);
+    surfaceFormat.setMajorVersion(2);
+    surfaceFormat.setMinorVersion(0);
+    QSurfaceFormat::setDefaultFormat(surfaceFormat);
+#else
     QCoreApplication::setAttribute(Qt::AA_UseDesktopOpenGL);
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QQuickWindow::setTextRenderType(QQuickWindow::NativeTextRendering);
@@ -69,6 +77,7 @@ int main(int argc, char *argv[])
     surfaceFormat.setMinorVersion(3);
     surfaceFormat.setProfile(QSurfaceFormat::CoreProfile);
     QSurfaceFormat::setDefaultFormat(surfaceFormat);
+#endif
 #endif
 #endif
 
@@ -87,8 +96,8 @@ int main(int argc, char *argv[])
     Settings settings;
     Appearance appearence(&settings);
     audio::Client::getInstance();
-    auto generator = std::make_shared<Generator>(settings.getGroup("generator"));
-    Shared::SourceList sourceList = std::make_shared<SourceList>();
+    auto generator = std::shared_ptr<Generator>(new Generator(settings.getGroup("generator")));
+    Shared::SourceList sourceList = std::shared_ptr<SourceList>(new SourceList());
     AutoSaver autoSaver(settings.getGroup("autosaver"), sourceList);
     auto t = new TargetTrace(settings.getGroup("targettrace"));
     auto notifier = Notifier::getInstance();
@@ -128,7 +137,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("applicationSettings", &settings);
     engine.rootContext()->setContextProperty("applicationAppearance", &appearence);
     engine.rootContext()->setContextProperty("sourceList", sourceList.get());
-    engine.rootContext()->setContextProperty("generatorModel", generator.get());
+    engine.rootContext()->setContextProperty("generatorModel", dynamic_cast<QObject *>(generator.get()));
     engine.rootContext()->setContextProperty("targetTraceModel", t);
     engine.rootContext()->setContextProperty("notifier", notifier);
 

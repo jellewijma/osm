@@ -52,7 +52,7 @@ Windowing::~Windowing()
 
 Shared::Source Windowing::clone() const
 {
-    auto cloned = std::make_shared<Windowing>();
+    auto cloned = std::shared_ptr<Windowing>(new Windowing());
     cloned->setMode(mode());
     cloned->setOffset(offset());
     cloned->setWide(wide());
@@ -95,7 +95,7 @@ void Windowing::fromJSON(QJsonObject data, const SourceList *list) noexcept
     setMaxFrequency(data["maxFrequency"].toDouble(maxFrequency()));
     setWindowFunctionType(static_cast<WindowFunction::Type>(data["windowFunctionType"].toInt(windowFunctionType())));
 
-    auto connection = std::make_shared<QMetaObject::Connection>();
+    auto connection = std::shared_ptr<QMetaObject::Connection>(new QMetaObject::Connection());
     auto connection_ptr = connection.get();
     auto fillSources = [ = ]() {
         auto sourceUuid = QUuid::fromString(data["source"].toString(""));
@@ -491,7 +491,7 @@ QUuid Windowing::sourceId() const
 
 Shared::Source Windowing::store()
 {
-    auto stored = std::make_shared<Stored>();
+    auto stored = std::shared_ptr<Stored>(new Stored());
     stored->build( *this );
     stored->autoName(name());
 

@@ -39,7 +39,7 @@ StandardLine::StandardLine(QObject *parent) : Abstract::Source(parent), m_mode(E
 
 Shared::Source StandardLine::clone() const
 {
-    auto cloned = std::make_shared<StandardLine>();
+    auto cloned = std::shared_ptr<StandardLine>(new StandardLine());
     cloned->setMode(mode());
     cloned->setLoudness(loudness());
     cloned->setName(name());

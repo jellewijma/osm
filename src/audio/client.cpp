@@ -31,8 +31,12 @@
 #include "plugins/wasapi.h"
 #endif
 
-#ifdef Q_OS_LINUX
+#if defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
 #include "plugins/alsa.h"
+#endif
+
+#ifdef Q_OS_ANDROID
+#include "plugins/opensles.h"
 #endif
 
 #ifdef USE_ASIO
@@ -85,8 +89,12 @@ void Client::initPlugins()
     m_plugins.push_back(QSharedPointer<Plugin>(new WasapiPlugin()));
 #endif
 
-#ifdef Q_OS_LINUX
+#if defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
     m_plugins.push_back(QSharedPointer<Plugin>(new AlsaPlugin()));
+#endif
+
+#ifdef Q_OS_ANDROID
+    m_plugins.push_back(QSharedPointer<Plugin>(new OpenSLESPlugin()));
 #endif
 
     for (auto &&plugin : m_plugins) {

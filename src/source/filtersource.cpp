@@ -44,7 +44,7 @@ FilterSource::FilterSource(QObject *parent) : Abstract::Source(parent), Meta::Fi
 
 Shared::Source FilterSource::clone() const
 {
-    auto cloned = std::make_shared<FilterSource>();
+    auto cloned = std::shared_ptr<FilterSource>(new FilterSource());
     cloned->setActive(active());
     cloned->setName(name());
     cloned->setMode(mode());
@@ -100,7 +100,7 @@ void FilterSource::fromJSON(QJsonObject data, const SourceList *) noexcept
 
 Shared::Source FilterSource::store()
 {
-    auto store = std::make_shared<Stored>();
+    auto store = std::shared_ptr<Stored>(new Stored());
     store->build( *this );
     store->autoName(name());
     return { store };
